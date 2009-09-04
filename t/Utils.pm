@@ -8,13 +8,13 @@ use vars qw(@EXPORT);
 @EXPORT = qw(write_and_read
              cleanup_backup list_backup
              stat_mode_owner stat_time
+             slurp
            );
 
 use Path::Class;
 use lib Path::Class::Dir->new(qw(t lib))->stringify;
 use Test::More;
 
-use File::Slurp qw(slurp);
 use IO::File::AtomicChange;
 
 sub hok(@) {
@@ -32,7 +32,7 @@ sub write_and_read {
     $cb->{before_close}->($f) if $cb->{before_close};
     $f->close;
 
-    return slurp $target_file;
+    return slurp($target_file);
 }
 
 sub _matched_file {
@@ -59,6 +59,13 @@ sub stat_mode_owner {
 
 sub stat_time {
     return (stat $_[0])[9]; # mtime
+}
+
+sub slurp {
+    open my $fh, '<', $_[0] or croak $!;
+    my $buf = do { local $/; <$fh> };
+    close $fh;
+    return $buf;
 }
 
 1;

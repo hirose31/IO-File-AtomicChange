@@ -5,7 +5,6 @@ all_from 'lib/IO/File/AtomicChange.pm';
 license  'perl';
 
 build_requires 'Test::More';
-build_requires 'File::Slurp';
 build_requires 'FindBin';
 
 requires 'IO::File';

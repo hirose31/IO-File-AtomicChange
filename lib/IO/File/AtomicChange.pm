@@ -3,7 +3,7 @@ package IO::File::AtomicChange;
 use strict;
 use warnings;
 
-our $VERSION = '0.01_01';
+our $VERSION = '0.01';
 
 use base qw(IO::File);
 use Carp;

@@ -7,7 +7,6 @@ use Test::More;
 plan tests => 5;
 
 use FindBin;
-use File::Slurp qw(slurp);
 use IO::File::AtomicChange;
 
 my $basedir     = $FindBin::Bin; # t/
