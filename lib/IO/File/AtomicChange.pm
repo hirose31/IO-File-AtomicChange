@@ -37,6 +37,8 @@ sub open {
     my ($self, $path, $mode, $opt) = @_;
     ref($self) or $self = $self->new;
 
+    # Because we do rename(2) atomically, temporary file must be in same
+    # partion with target file.
     my $temp = mktemp("${path}.XXXXXX");
     $self->temp_file($temp);
     $self->target_file($path);
@@ -66,10 +68,7 @@ sub close {
     unless ($self->_closed(1)) {
         if ($self->SUPER::close()) {
 
-            if (-f $self->target_file) {
-                $self->copy_modown_to_temp;
-                $self->backup if $self->backup_dir;
-            }
+            $self->backup if (-f $self->target_file && $self->backup_dir);
 
             rename($self->temp_file, $self->target_file)
                 or ($die ? croak "close (rename) atomic file: $!\n" : return undef);
@@ -135,13 +134,11 @@ sub copy_preserving_attr {
 
     File::Copy::copy($from, $to) or croak $!;
 
-    # mode, uid, gid
     my($mode, $uid, $gid, $atime, $mtime) = (stat($from))[2,4,5,8,9];
     chown $uid, $gid, $to;
     chmod $mode,      $to;
-
-    # atime, mtime
     utime $atime, $mtime, $to;
+    1;
 }
 
 
@@ -150,20 +147,73 @@ __END__
 
 =head1 NAME
 
-IO::File::AtomicChange - fixme
+IO::File::AtomicChange - change content of a file atomically
 
 =head1 SYNOPSIS
 
+truncate and write to temporary file. When you call $fh->close, replace
+target file with temporary file preserved permission and owner (if
+possible).
+
   use IO::File::AtomicChange;
-  fixme
+  
+  my $fh = IO::File::AtomicChange->new("foo.conf", "w");
+  $fh->print("# create new file\n");
+  $fh->print("foo\n");
+  $fh->print("bar\n");
+  $fh->close; # MUST CALL close EXPLICITLY
+
+
+If you specify "backup_dir", save original file into backup directory (like
+"/var/backup/foo.conf_YYYY-MM-DD_HHMMSS_PID") before replace.
+
+  my $fh = IO::File::AtomicChange->new("foo.conf", "a",
+                                       { backup_dir => "/var/backup/" });
+  $fh->print("# append\n");
+  $fh->print("baz\n");
+  $fh->print("qux\n");
+  $fh->close; # MUST CALL close EXPLICITLY
 
 =head1 DESCRIPTION
 
-IO::File::AtomicChange is fixme
+IO::File::AtomicChange is intended for people who need to update files
+reliably and atomically.
+
+For example, in the case of generating a configuration file, you should be
+careful about aborting generator program or be loaded by other program
+in halfway writing.
+
+IO::File::AtomicChange free you from such a painful situation and boring code.
+
+=head1 INTERNAL
+
+  * open
+    1. fix filename of temporary file by mktemp.
+    2. if target file already exists, copy target file to temporary file preserving permission and owner.
+    3. open temporary file and return its file handle.
+  
+  * write
+    1. write date into temporary file.
+  
+  * close
+    1. close temporary file.
+    2. if target file exists and specified "backup_dir" option, copy target file into backup directory preserving permission and owner, mtime.
+    3. rename temporary file to target file.
+
+=head1 CAVEATS
+
+You must call "$fh->close" explicitly when commit changes.
+
+Currently, "close $fh" or "undef $fh" don't affect target file. So if you
+exit without calling "$fh->close", CHANGES ARE DISCARDED.
 
 =head1 AUTHOR
 
 HIROSE Masaaki E<lt>hirose31 _at_ gmail.comE<gt>
+
+=head1 THANKS TO
+
+kazuho gave me many shrewd advices.
 
 =head1 REPOSITORY
 
@@ -175,6 +225,8 @@ patches and collaborators are welcome.
 
 =head1 SEE ALSO
 
+L<IO::File>
+
 =head1 COPYRIGHT & LICENSE
 
 Copyright HIROSE Masaaki 2009-
@@ -183,3 +235,26 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
+
+
+=begin comment
+
+=head0 SPECIAL THANKS TO
+
+typester recommended brand new style "SEE ALSO" section.
+
+=head0 IMHO
+
+* IO::AtomicFile
+  * same name of temporary file.
+    several processes update a one file, temporary file is mangled.
+  * close in DESTROY block.
+    leave halfway writing when die in writing  process.
+      $fh->print("begin write\n");
+      $fh->print(generate_contents()); # call die in generate_contents()
+      $fh->print("EOF");               # this is not written...
+
+* File::AtomicWrite
+  * shared $tmp_fh globally?
+
+=end comment
