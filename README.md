@@ -1,8 +1,14 @@
 ABSTRACT
 ================
 
-This is Perl module IO::File::AtomicChange.
-fixme
+IO::File::AtomicChange is intended for people who need to update files
+reliably and atomically.
+
+For example, in the case of generating a configuration file, you should be
+careful about aborting generator program or be loaded by other program
+in halfway writing.
+
+IO::File::AtomicChange free you from such a painful situation and boring code.
 
 
 INSTALLATION

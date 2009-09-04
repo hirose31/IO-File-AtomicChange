@@ -71,9 +71,9 @@ sub close {
             $self->backup if (-f $self->target_file && $self->backup_dir);
 
             rename($self->temp_file, $self->target_file)
-                or ($die ? croak "close (rename) atomic file: $!\n" : return undef);
+                or ($die ? croak "close (rename) atomic file: $!\n" : return);
         } else {
-            $die ? croak "close atomic file: $!\n" : return undef;
+            $die ? croak "close atomic file: $!\n" : return;
         }
     }
     1;
@@ -213,7 +213,7 @@ HIROSE Masaaki E<lt>hirose31 _at_ gmail.comE<gt>
 
 =head1 THANKS TO
 
-kazuho gave me many shrewd advices.
+kazuho gave me many shrewd advice.
 
 =head1 REPOSITORY
 
@@ -225,7 +225,7 @@ patches and collaborators are welcome.
 
 =head1 SEE ALSO
 
-L<IO::File>
+L<IO::File>, L<IO::AtomicFile>, L<File::AtomicWrite>
 
 =head1 COPYRIGHT & LICENSE
 
