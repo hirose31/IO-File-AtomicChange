@@ -2,6 +2,7 @@ package t::Utils;
 
 use strict;
 use warnings;
+use Carp;
 
 use base qw(Exporter);
 use vars qw(@EXPORT);
@@ -62,7 +63,7 @@ sub stat_time {
 }
 
 sub slurp {
-    open my $fh, '<', $_[0] or croak $!;
+    open my $fh, '<', $_[0] or Carp::croak $!;
     my $buf = do { local $/; <$fh> };
     close $fh;
     return $buf;
