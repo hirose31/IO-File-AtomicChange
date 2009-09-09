@@ -3,7 +3,7 @@ package IO::File::AtomicChange;
 use strict;
 use warnings;
 
-our $VERSION = '0.02_01';
+our $VERSION = '0.02';
 
 use base qw(IO::File);
 use Carp;
@@ -94,16 +94,18 @@ sub backup {
 
     require Path::Class;
     require POSIX;
+    require Time::HiRes;
 
     my $basename = Path::Class::file($self->target_file)->basename;
 
     my $backup_file;
     my $n = 0;
     while ($n < 7) {
-        $backup_file = sprintf("%s/%s_%s_%d%s",
+        $backup_file = sprintf("%s/%s_%s.%d_%d%s",
                                $self->backup_dir,
                                $basename,
                                POSIX::strftime("%Y-%m-%d_%H%M%S",localtime()),
+                               (Time::HiRes::gettimeofday())[1],
                                $$,
                                ($n == 0 ? "" : ".$n"),
                               );

@@ -7,6 +7,7 @@ license  'perl';
 build_requires 'Test::More';
 build_requires 'FindBin';
 
+requires 'Time::HiRes';
 requires 'IO::File';
 requires 'File::Temp';
 requires 'File::Copy';
@@ -18,6 +19,8 @@ tests 't/*.t';
 #author_tests 'xt';
 
 build_requires 'Test::More';
+build_requires 'IO::Scalar';
+
 auto_set_repository;
 use_test_base;
 auto_include;
