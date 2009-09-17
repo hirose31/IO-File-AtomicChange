@@ -14,9 +14,9 @@ use File::Sync;
 sub new {
     my $class = shift;
     my $self = $class->SUPER::new();
-    $self->temp_file("");
-    $self->target_file("");
-    $self->backup_dir("");
+    $self->_temp_file("");
+    $self->_target_file("");
+    $self->_backup_dir("");
     $self->open(@_) if @_;
     $self;
 }
@@ -26,9 +26,9 @@ sub _accessor {
     ${*$self}{$tag} = $val if $val;
     return ${*$self}{$tag};
 }
-sub temp_file   { return shift->_accessor("io_file_atomicchange_temp", @_) }
-sub target_file { return shift->_accessor("io_file_atomicchange_path", @_) }
-sub backup_dir  { return shift->_accessor("io_file_atomicchange_back", @_) }
+sub _temp_file   { return shift->_accessor("io_file_atomicchange_temp", @_) }
+sub _target_file { return shift->_accessor("io_file_atomicchange_path", @_) }
+sub _backup_dir  { return shift->_accessor("io_file_atomicchange_back", @_) }
 
 sub DESTROY {
     carp "[CAUTION] disposed object without closing file handle." unless $_[0]->_closed;
@@ -41,15 +41,15 @@ sub open {
     # Because we do rename(2) atomically, temporary file must be in same
     # partion with target file.
     my $temp = mktemp("${path}.XXXXXX");
-    $self->temp_file($temp);
-    $self->target_file($path);
+    $self->_temp_file($temp);
+    $self->_target_file($path);
 
     copy_preserving_attr($path, $temp) if -f $path;
     if (exists $opt->{backup_dir}) {
         unless (-d $opt->{backup_dir}) {
             croak "no such directory: $opt->{backup_dir}";
         }
-        $self->backup_dir($opt->{backup_dir});
+        $self->_backup_dir($opt->{backup_dir});
     }
 
     $self->SUPER::open($temp, $mode) ? $self : undef;
@@ -70,9 +70,9 @@ sub close {
     unless ($self->_closed(1)) {
         if ($self->SUPER::close()) {
 
-            $self->backup if ($self->backup_dir && -f $self->target_file);
+            $self->backup if ($self->_backup_dir && -f $self->_target_file);
 
-            rename($self->temp_file, $self->target_file)
+            rename($self->_temp_file, $self->_target_file)
                 or ($die ? croak "close (rename) atomic file: $!\n" : return);
         } else {
             $die ? croak "close atomic file: $!\n" : return;
@@ -84,9 +84,9 @@ sub close {
 sub copy_modown_to_temp {
     my($self) = @_;
 
-    my($mode, $uid, $gid) = (stat($self->target_file))[2,4,5];
-    chown $uid, $gid, $self->temp_file;
-    chmod $mode,      $self->temp_file;
+    my($mode, $uid, $gid) = (stat($self->_target_file))[2,4,5];
+    chown $uid, $gid, $self->_temp_file;
+    chmod $mode,      $self->_temp_file;
 }
 
 sub backup {
@@ -96,13 +96,13 @@ sub backup {
     require POSIX;
     require Time::HiRes;
 
-    my $basename = Path::Class::file($self->target_file)->basename;
+    my $basename = Path::Class::file($self->_target_file)->basename;
 
     my $backup_file;
     my $n = 0;
     while ($n < 7) {
         $backup_file = sprintf("%s/%s_%s.%d_%d%s",
-                               $self->backup_dir,
+                               $self->_backup_dir,
                                $basename,
                                POSIX::strftime("%Y-%m-%d_%H%M%S",localtime()),
                                (Time::HiRes::gettimeofday())[1],
@@ -114,7 +114,7 @@ sub backup {
     }
     croak "already exists backup file: $backup_file" if -f $backup_file;
 
-    copy_preserving_attr($self->target_file, $backup_file);
+    copy_preserving_attr($self->_target_file, $backup_file);
 }
 
 
@@ -122,7 +122,7 @@ sub delete {
     my $self = shift;
     unless ($self->_closed(1)) {
         $self->SUPER::close();
-        return unlink($self->temp_file);
+        return unlink($self->_temp_file);
     }
     1;
 }
