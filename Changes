@@ -1,5 +1,9 @@
 Revision history for IO::File::AtomicChange
 
+0.03  fixme
+        * check if defined backdup_dir before check existence of target_file.
+          (thanks: Ryo Okamoto san)
+
 0.02  Wed Sep  9 09:23:30 UTC 2009
         * do fsync(2) before close and rename. (thanks: kosaki san)
         * include microsecond in backup filename.
