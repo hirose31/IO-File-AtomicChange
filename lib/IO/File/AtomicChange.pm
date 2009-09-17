@@ -70,7 +70,7 @@ sub close {
     unless ($self->_closed(1)) {
         if ($self->SUPER::close()) {
 
-            $self->backup if (-f $self->target_file && $self->backup_dir);
+            $self->backup if ($self->backup_dir && -f $self->target_file);
 
             rename($self->temp_file, $self->target_file)
                 or ($die ? croak "close (rename) atomic file: $!\n" : return);
