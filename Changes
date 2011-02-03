@@ -1,8 +1,9 @@
 Revision history for IO::File::AtomicChange
 
-0.03  fixme
+0.03  Thu Feb  3 10:30:00 UTC 2011
         * check if defined backdup_dir before check existence of target_file.
           (thanks: Ryo Okamoto san)
+        * fixed glitch of file order: t/20_backup.t
 
 0.02  Wed Sep  9 09:23:30 UTC 2009
         * do fsync(2) before close and rename. (thanks: kosaki san)
