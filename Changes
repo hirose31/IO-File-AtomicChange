@@ -1,5 +1,8 @@
 Revision history for IO::File::AtomicChange
 
+0.04  Wed Jul 24 10:39:00 UTC 2013
+        * No feature change just refine documents.
+
 0.03  Thu Feb  3 10:30:00 UTC 2011
         * check if defined backdup_dir before check existence of target_file.
           (thanks: Ryo Okamoto san)
