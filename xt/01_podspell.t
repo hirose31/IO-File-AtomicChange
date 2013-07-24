@@ -9,3 +9,7 @@ HIROSE Masaaki
 hirose31 _at_ gmail.com
 IO::File::AtomicChange
 kazuho
+Emacsen
+et
+paren
+utf

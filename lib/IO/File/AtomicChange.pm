@@ -149,6 +149,15 @@ sub copy_preserving_attr {
 1;
 __END__
 
+=encoding utf-8
+
+=begin html
+
+<a href="https://travis-ci.org/hirose31/IO-File-AtomicChange"><img src="https://travis-ci.org/hirose31/IO-File-AtomicChange.png?branch=master" alt="Build Status" /></a>
+<a href="https://coveralls.io/r/hirose31/IO-File-AtomicChange?branch=master"><img src="https://coveralls.io/repos/hirose31/IO-File-AtomicChange/badge.png?branch=master" alt="Coverage Status" /></a>
+
+=end html
+
 =head1 NAME
 
 IO::File::AtomicChange - change content of a file atomically
@@ -159,24 +168,23 @@ truncate and write to temporary file. When you call $fh->close, replace
 target file with temporary file preserved permission and owner (if
 possible).
 
-  use IO::File::AtomicChange;
-  
-  my $fh = IO::File::AtomicChange->new("foo.conf", "w");
-  $fh->print("# create new file\n");
-  $fh->print("foo\n");
-  $fh->print("bar\n");
-  $fh->close; # MUST CALL close EXPLICITLY
-
+    use IO::File::AtomicChange;
+    
+    my $fh = IO::File::AtomicChange->new("foo.conf", "w");
+    $fh->print("# create new file\n");
+    $fh->print("foo\n");
+    $fh->print("bar\n");
+    $fh->close; # MUST CALL close EXPLICITLY
 
 If you specify "backup_dir", save original file into backup directory (like
 "/var/backup/foo.conf_YYYY-MM-DD_HHMMSS_PID") before replace.
 
-  my $fh = IO::File::AtomicChange->new("foo.conf", "a",
-                                       { backup_dir => "/var/backup/" });
-  $fh->print("# append\n");
-  $fh->print("baz\n");
-  $fh->print("qux\n");
-  $fh->close; # MUST CALL close EXPLICITLY
+    my $fh = IO::File::AtomicChange->new("foo.conf", "a",
+                                         { backup_dir => "/var/backup/" });
+    $fh->print("# append\n");
+    $fh->print("baz\n");
+    $fh->print("qux\n");
+    $fh->close; # MUST CALL close EXPLICITLY
 
 =head1 DESCRIPTION
 
@@ -191,18 +199,18 @@ IO::File::AtomicChange free you from such a painful situation and boring code.
 
 =head1 INTERNAL
 
-  * open
-    1. fix filename of temporary file by mktemp.
-    2. if target file already exists, copy target file to temporary file preserving permission and owner.
-    3. open temporary file and return its file handle.
-  
-  * write
-    1. write date into temporary file.
-  
-  * close
-    1. close temporary file.
-    2. if target file exists and specified "backup_dir" option, copy target file into backup directory preserving permission and owner, mtime.
-    3. rename temporary file to target file.
+    * open
+      1. fix filename of temporary file by mktemp.
+      2. if target file already exists, copy target file to temporary file preserving permission and owner.
+      3. open temporary file and return its file handle.
+    
+    * write
+      1. write date into temporary file.
+    
+    * close
+      1. close temporary file.
+      2. if target file exists and specified "backup_dir" option, copy target file into backup directory preserving permission and owner, mtime.
+      3. rename temporary file to target file.
 
 =head1 CAVEATS
 
@@ -221,9 +229,9 @@ kazuho gave me many shrewd advice.
 
 =head1 REPOSITORY
 
-L<http://github.com/hirose31/p5-io-file-atomicchange/tree/master>
+L<https://github.com/hirose31/IO-File-AtomicChange>
 
-  git clone git://github.com/hirose31/p5-io-file-atomicchange.git
+  git clone git://github.com/hirose31/IO-File-AtomicChange.git
 
 patches and collaborators are welcome.
 
@@ -239,7 +247,6 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
-
 
 =begin comment
 
@@ -262,3 +269,15 @@ typester recommended brand new style "SEE ALSO" section.
   * shared $tmp_fh globally?
 
 =end comment
+
+# for Emacsen
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 4
+# cperl-close-paren-offset: -4
+# cperl-indent-parens-as-block: t
+# indent-tabs-mode: nil
+# coding: utf-8
+# End:
+
+# vi: set ts=4 sw=4 sts=0 et ft=perl fenc=utf-8 ff=unix :
