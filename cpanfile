@@ -8,7 +8,7 @@ requires 'File::Sync';
 requires 'Path::Class';
 requires 'POSIX';
 
-on configure => sub {
+on develop => sub {
     requires 'Module::Install';
     requires 'Module::Install::CPANfile';
 };
