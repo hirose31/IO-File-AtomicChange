@@ -1,5 +1,9 @@
 Revision history for IO::File::AtomicChange
 
+0.05  2013-10-21
+    [INSTALLATION]
+        - Change phase of Module::Install in cpanfile. (thanks: shoichikaji)
+
 0.04  Wed Jul 24 10:39:00 UTC 2013
         * No feature change just refine documents.
 
