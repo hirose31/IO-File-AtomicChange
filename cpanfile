@@ -5,7 +5,7 @@ requires 'IO::File';
 requires 'File::Temp';
 requires 'File::Copy';
 requires 'File::Sync';
-requires 'Path::Class';
+requires 'File::Spec';
 requires 'POSIX';
 
 on develop => sub {

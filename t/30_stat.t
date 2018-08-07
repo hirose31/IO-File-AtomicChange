@@ -47,6 +47,6 @@ push @stat_old, stat_time($target_file);
 $testee = write_and_read([$target_file, "w", {backup_dir=>$backup_dir}], \@data);
 is($testee, join("",@data), "create truncate write");
 @backup = list_backup($backup_dir, $basename);
-@stat = stat_mode_owner($backup[0]->stringify);
-push @stat, stat_time($backup[0]->stringify);
+@stat = stat_mode_owner($backup[0]);
+push @stat, stat_time($backup[0]);
 is_deeply(\@stat, \@stat_old, "mtime preserved?");

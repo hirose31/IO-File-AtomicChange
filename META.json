@@ -45,7 +45,7 @@
             "File::Temp" : "0",
             "IO::File" : "0",
             "POSIX" : "0",
-            "Path::Class" : "0",
+            "File::Spec" : "0",
             "Time::HiRes" : "0"
          }
       },

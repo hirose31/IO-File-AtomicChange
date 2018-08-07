@@ -12,8 +12,8 @@ use vars qw(@EXPORT);
              slurp
            );
 
-use Path::Class;
-use lib Path::Class::Dir->new(qw(t lib))->stringify;
+use File::Spec;
+use lib File::Spec->catdir(qw(t lib));
 use Test::More;
 
 use IO::File::AtomicChange;
@@ -38,15 +38,17 @@ sub write_and_read {
 
 sub _matched_file {
     my($backup_dir, $basename) = @_;
+    opendir my $dh, $backup_dir or die "Can't open directory $backup_dir: $!";
     return
-        sort {$b->basename cmp $a->basename }
-        grep {!$_->is_dir && $_->basename =~ /^$basename/}
-        Path::Class::Dir->new($backup_dir)->children;
+        map File::Spec->catfile($backup_dir, $_),
+        sort
+        grep { !-d && /^$basename/ }
+        readdir $dh;
 }
 
 sub cleanup_backup {
     my($backup_dir, $basename) = @_;
-    map {$_->remove} _matched_file($backup_dir, $basename);
+    do { 1 while unlink $_ } for _matched_file($backup_dir, $basename);
 }
 
 sub list_backup {
