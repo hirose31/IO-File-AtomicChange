@@ -44,11 +44,11 @@ $testee = write_and_read([$target_file, "a", {backup_dir=>$backup_dir}], \@data)
 push @wrote, @data;
 @backup2 = list_backup($backup_dir, $basename);
 is(scalar(@backup2), 2, "do backup (2)");
-my %old_backup = map { $_->stringify => 1 } @backup;
-@backup2 = grep { ! $old_backup{ $_->stringify } } @backup2;
+my %old_backup = map { $_ => 1 } @backup;
+@backup2 = grep { ! $old_backup{ $_ } } @backup2;
 
 ###
 ###
 is($testee, join("",@wrote), "new data");
-$testee = $backup2[0]->slurp;
+$testee = slurp($backup2[0]);
 is($testee, $data_backuped, "backuped data");

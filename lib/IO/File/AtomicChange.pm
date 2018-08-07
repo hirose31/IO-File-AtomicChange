@@ -92,11 +92,11 @@ sub copy_modown_to_temp {
 sub backup {
     my($self) = @_;
 
-    require Path::Class;
+    require File::Spec;
     require POSIX;
     require Time::HiRes;
 
-    my $basename = Path::Class::file($self->_target_file)->basename;
+    my $basename = File::Spec->splitpath($self->_target_file);
 
     my $backup_file;
     my $n = 0;
