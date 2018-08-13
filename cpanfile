@@ -4,7 +4,6 @@ requires 'Time::HiRes';
 requires 'IO::File';
 requires 'File::Temp';
 requires 'File::Copy';
-requires 'File::Sync';
 requires 'Path::Class';
 requires 'POSIX';
 
