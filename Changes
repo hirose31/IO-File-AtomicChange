@@ -1,5 +1,7 @@
 Revision history for IO::File::AtomicChange
 
+{{$NEXT}}
+
 0.05  2013-10-21
     [INSTALLATION]
         - Change phase of Module::Install in cpanfile. (thanks: shoichikaji)
