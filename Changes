@@ -1,6 +1,8 @@
 Revision history for IO::File::AtomicChange
 
 {{$NEXT}}
+    [IMPROVEMENTS]
+        - Use IO::Handle#sync instead of File::Sync::fsync (issue #4 by @ap)
 
 0.05  2013-10-21
     [INSTALLATION]
