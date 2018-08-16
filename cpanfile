@@ -3,7 +3,7 @@
 requires 'perl', '5.008005';
 
 requires 'Time::HiRes';
-requires 'IO::File';
+requires 'IO', '1.39';
 requires 'File::Temp';
 requires 'File::Copy';
 requires 'Path::Class';

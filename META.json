@@ -47,7 +47,7 @@
          "requires" : {
             "File::Copy" : "0",
             "File::Temp" : "0",
-            "IO::File" : "0",
+            "IO" : "1.39",
             "POSIX" : "0",
             "Path::Class" : "0",
             "Time::HiRes" : "0",
