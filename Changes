@@ -1,6 +1,8 @@
 Revision history for IO::File::AtomicChange
 
 {{$NEXT}}
+
+0.07_02   2018-08-17 10:20:47+00:00 UTC (TRIAL RELEASE)
     [INSTALLATION]
         - Add path of dist dir to @INC
 
