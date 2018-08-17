@@ -1,6 +1,8 @@
 Revision history for IO::File::AtomicChange
 
 {{$NEXT}}
+
+0.07_01   2018-08-17 08:42:12+00:00 UTC (TRIAL RELEASE)
     [INSTALLATION]
         - Add t/ to @INC
 
